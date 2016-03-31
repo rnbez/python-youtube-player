@@ -13,7 +13,7 @@ class YouTubePlayer:
         self.queue = Queue()
         self.is_stopped = False
         self.is_media_set = False
-        self.instance = vlc.Instance('--no-fullscreen --autoscale --quiet')
+        self.instance = vlc.Instance('--no-fullscreen', '--autoscale', '--quiet')
         self.playlist = self.instance.media_list_new()
         self.player = self.instance.media_list_player_new()
         self.player.set_media_list(self.playlist)
