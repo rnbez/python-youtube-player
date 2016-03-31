@@ -35,10 +35,10 @@ example:
 $ python client.py localhost 9999
 ```
 This will initialize the client and open a command prompt. The following commands are accepted:
-* ```/play```
-* ```/pause```
-* ```/next```
-* ```/add [YOUTUBE URL]```
+* `/play`
+* `/pause`
+* `/next`
+* `/add [YOUTUBE URL]`
 
 See the example:
 ```bash
