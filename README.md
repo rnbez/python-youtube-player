@@ -19,14 +19,18 @@ In order to run this project, you need to install both vlc and pafy. See the fol
 ####Running the Server
 Just run the server script, assigning a hostname and a port to it.
 ```bash
-usage: python server.py [hostname] [port]
-example: python server.py localhost 9999
+usage: 
+$ python server.py [hostname] [port]
+
+example: 
+$ python server.py localhost 9999
 ```
 ####Running the Client
 First, run the client script, assigning a hostname and a port to it.
 ```bash
 usage: 
 $ python client.py [hostname] [port]
+
 example: 
 $ python client.py localhost 9999
 ```
