@@ -24,8 +24,10 @@ example: python server.py localhost 9999
 ####Running the Client
 First, run the client script, assigning a hostname and a port to it.
 ```bash
-usage: python client.py [hostname] [port]
-example: python client.py localhost 9999
+usage: 
+$ python client.py [hostname] [port]
+example: 
+$ python client.py localhost 9999
 ```
 This will initialize the client and open a command prompt. The following commands are accepted:
 * ```/play```
@@ -35,7 +37,7 @@ This will initialize the client and open a command prompt. The following command
 
 See the example:
 ```bash
-python client.py localhost 9999
+$ python client.py localhost 9999
 >> /add https://www.youtube.com/watch?v=OPf0YbXqDm0
 >> /add https://www.youtube.com/watch?v=YQHsXMglC9A
 >> /add https://www.youtube.com/watch?v=oyEuk8j8imI
