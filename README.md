@@ -8,6 +8,7 @@ This is a python project that uses both *pafy* and *vlc* libraries to stream vid
 ## Features
 * Multiclient - let everyone in the network add their music to your play-list
 * Play-list Management - add, pause and skip any music on your play-list
+* Ad-Free
 
 ## Usage
 #### Dependencies
