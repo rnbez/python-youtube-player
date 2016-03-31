@@ -1,2 +1,6 @@
-# python-youtube-player
-Python project to play youtube videos and receive commands over the network
+# Python Youtube Player
+Python project to play Youtube videos and receive commands over the network 
+
+
+## Description
+## 
