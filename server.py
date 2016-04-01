@@ -60,7 +60,7 @@ if __name__ == "__main__":
                     # print line
                     yt_vid = YouTubeVideo.from_JSON(line)
                     print yt_vid.name
-                    playlist.append(yt_vid)
+                    #playlist.append(yt_vid)
         except IOError as e:
             playlist = []
 
