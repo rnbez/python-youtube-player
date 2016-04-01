@@ -12,7 +12,14 @@ This is a python project that uses both *pafy* and *vlc* libraries to stream vid
 
 ## Usage
 #### Dependencies
-In order to run this project, you need to install both vlc and pafy. See the following links for installation guides:
+In order to run this project, you need to install both vlc and pafy. Run the following lines:
+```bash
+$ sudo pip install pafy
+$ sudo pip install youtube_dl
+$ sudo apt-get install vlc
+```
+
+See the following links for further information on the installation process:
 * [Pafy Repository](https://github.com/mps-youtube/pafy)
 * [VLC Bindings](https://wiki.videolan.org/Python_bindings/)
 
