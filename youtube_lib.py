@@ -37,7 +37,7 @@ class YouTubeVideo():
 class YouTubePlayer:
     def __init__(self):
         # --no-xlib --no-stats --no-video
-        self.instance = vlc.Instance('--no-video')
+        self.instance = vlc.Instance("--no-video")
         self.playlist = self.instance.media_list_new()
         self.player = self.instance.media_list_player_new()
         self.player.set_media_list(self.playlist)

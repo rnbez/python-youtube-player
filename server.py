@@ -51,18 +51,18 @@ if __name__ == "__main__":
     player = YouTubePlayer()
     playlist = []
 
-    if os.path.isfile(sav_file):
-        try:
-            with open(sav_file) as file:
-                # pass
-                # print file.readline()
-                for line in file:
-                    # print line
-                    yt_vid = YouTubeVideo.from_JSON(line)
-                    print yt_vid.name
-                    #playlist.append(yt_vid)
-        except IOError as e:
-            playlist = []
+    # if os.path.isfile(sav_file):
+    #     try:
+    #         with open(sav_file) as file:
+    #             # pass
+    #             # print file.readline()
+    #             for line in file:
+    #                 # print line
+    #                 yt_vid = YouTubeVideo.from_JSON(line)
+    #                 print yt_vid.name
+    #                 playlist.append(yt_vid)
+    #     except IOError as e:
+    #         playlist = []
 
     HOST = sys.argv[1]
     PORT = int(sys.argv[2])
@@ -87,10 +87,10 @@ if __name__ == "__main__":
     print "closing server"
     server.server_close()
 
-    f = open(sav_file, 'w')
-    for video in playlist:
-        f.write(video.to_JSON())
-        f.write("\n")
-    f.close()
+    # f = open(sav_file, 'w')
+    # for video in playlist:
+    #     f.write(video.to_JSON())
+    #     f.write("\n")
+    # f.close()
 
     print "Bye"
