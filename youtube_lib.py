@@ -39,26 +39,31 @@ class YouTubePlayer:
         # --no-xlib --no-stats --no-video
         self.instance = vlc.Instance("--no-video")
         self.playlist = self.instance.media_list_new()
-        self.player = self.instance.media_list_player_new()
-        self.player.set_media_list(self.playlist)
-        self.event_manager = self.player.event_manager()
+        self.player = self.instance.media_player_new()
+        self.list_player = self.instance.media_list_player_new()
+        self.list_player.set_media_player(self.player)
+        self.list_player.set_media_list(self.playlist)
+        self.event_manager = self.list_player.event_manager()
+
 
     def play(self):
-        self.player.play()
+        self.list_player.play()
         return
     def pause(self):
-        self.player.pause()
+        self.list_player.pause()
         return
     def stop(self):
-        self.player.stop()
+        self.list_player.stop()
         return
     def next(self):
-        self.player.next()
+        self.list_player.next()
     def enqueue(self, url):
         # video = pafy.new(url)
         # url = video.getbest().url
         self.playlist.lock()
-        self.playlist.add_media(self.instance.media_new(url))
+        media = self.instance.media_new(url)
+        media.parse()
+        self.playlist.add_media(media)
         # print "playlist size is now", self.playlist.count()
         self.playlist.unlock()
 
@@ -69,6 +74,10 @@ class YouTubePlayer:
         #     print "  ", index, ": ", url
         #     index += 1
         # return
+    def set_volume(self, perc):
+        # vol = int(1024 * perc / 100)
+        self.player.audio_set_volume(perc)
+        print self.player.audio_get_volume()
 
     @vlc.callbackmethod
     def end_callback(self, event):

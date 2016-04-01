@@ -30,6 +30,9 @@ class ThreadedTCPRequestHandler(SocketServer.BaseRequestHandler):
                 yt_vid = YouTubeVideo.get_instance(args)
                 self.server.playlist.append(yt_vid)
                 self.server.player.enqueue(yt_vid.stream_url)
+        elif command == "/vol":
+            if args:
+                self.server.player.set_volume(int(args))
         data = ""
         response = "{} {}".format(200, data)
         self.request.sendall(response)
