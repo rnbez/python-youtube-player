@@ -1,10 +1,9 @@
 #! /usr/bin/python
 
-import sys, time
+import os, sys, time
 import vlc, pafy #https://github.com/mps-youtube/pafy
 import threading, socket, SocketServer
 
-from Queue import Queue
 from youtube_lib import YouTubePlayer, YouTubeVideo
 
 class ThreadedTCPRequestHandler(SocketServer.BaseRequestHandler):
@@ -28,29 +27,46 @@ class ThreadedTCPRequestHandler(SocketServer.BaseRequestHandler):
             self.server.player.next()
         elif command == "/add":
             if args:
-                self.server.player.enqueue(args)
+                yt_vid = YouTubeVideo.get_instance(args)
+                self.server.playlist.append(yt_vid)
+                self.server.player.enqueue(yt_vid.stream_url)
         data = ""
         response = "{} {}".format(200, data)
         self.request.sendall(response)
 
 class ThreadedTCPServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
-    def __init__(self, server_address, player, handler_class=ThreadedTCPRequestHandler):
+    def __init__(self, server_address, player, playlist, handler_class=ThreadedTCPRequestHandler):
         self.player = player
+        self.playlist = playlist
+        if len(self.playlist) > 0:
+            for v in playlist:
+                self.player.enqueue(v.stream_url)
+
         SocketServer.TCPServer.__init__(self, server_address, handler_class)
         return
 
 if __name__ == "__main__":
-    # instance = vlc.Instance('--no-fullscreen')
-    # url = "https://www.youtube.com/watch?v=OPf0YbXqDm0"
-    # video = pafy.new(url)
-    # movie = video.getbest().url
-    # player = instance.media_player_new()
+    sav_file = 'playlist.sav'
+
     player = YouTubePlayer()
+    playlist = []
+
+    if os.path.isfile(sav_file):
+        try:
+            with open(sav_file) as file:
+                # pass
+                # print file.readline()
+                for line in file:
+                    # print line
+                    yt_vid = YouTubeVideo.from_JSON(line)
+                    print yt_vid.name
+                    playlist.append(yt_vid)
+        except IOError as e:
+            playlist = []
 
     HOST = sys.argv[1]
     PORT = int(sys.argv[2])
-    # HOST, PORT = "localhost", 9995
-    server = ThreadedTCPServer((HOST, PORT), player)
+    server = ThreadedTCPServer((HOST, PORT), player, playlist)
     ip, port = server.server_address
     print "Server running at:", ip, port
     server_thread = threading.Thread(name="thr_server", target=server.serve_forever)
@@ -59,9 +75,6 @@ if __name__ == "__main__":
     print "Server loop running in thread:", server_thread.name
 
     try:
-        # player.set_media(instance.media_new(movie))
-        # player.play()
-        # player.pause()
         while True:
             pass
     except KeyboardInterrupt:
@@ -73,4 +86,11 @@ if __name__ == "__main__":
     server.shutdown()
     print "closing server"
     server.server_close()
+
+    f = open(sav_file, 'w')
+    for video in playlist:
+        f.write(video.to_JSON())
+        f.write("\n")
+    f.close()
+
     print "Bye"
