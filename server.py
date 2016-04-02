@@ -67,7 +67,7 @@ if __name__ == "__main__":
     #     except IOError as e:
     #         playlist = []
 
-    HOST = sys.argv[1]
+    HOST = ''#sys.argv[1]
     PORT = int(sys.argv[2])
     server = ThreadedTCPServer((HOST, PORT), player, playlist)
     ip, port = server.server_address
