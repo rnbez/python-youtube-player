@@ -82,6 +82,7 @@ class ThreadedTCPRequestHandler(SocketServer.BaseRequestHandler):
         elif command == "/isplaying":
             response_code = 102
             response_data = self.server.player.isPlaying()
+            print "respdata: ", response_data
 
         response = "{} {}".format(response_code, response_data)
         self.request.sendall(response)

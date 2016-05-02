@@ -58,7 +58,7 @@ class YouTubePlayer:
     def next(self):
         self.list_player.next()
     def isPlaying(self):
-        self.list_player.isPlaying()
+        return self.list_player.is_playing()
 
     def enqueue(self, yt_vid):
         self.playlist.lock()

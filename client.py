@@ -62,13 +62,19 @@ def get_playlist(message):
 def get_queue(message):
     code, data = send(message)
     l = json.loads(data)
-    fst = True
+    
+    printplaying = True  # to print if is now playing
+    newcode, newdata = send("/isplaying")
+    if newcode == '102':
+        if newdata == '0':
+            printplaying = False
+
     if not l:
         print "There is no tracks to play next"
     else:
         for item in l:
-            if fst:
-                fst = False
+            if printplaying:
+                printplaying = False
                 print "(Now playing)",
             vid = json.loads(item)
             print vid['name']
