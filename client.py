@@ -48,6 +48,32 @@ def now_playing(message):
         print dt['name']
     pass
 
+def get_playlist(message):
+    code, data = send(message)
+    l = json.loads(data)
+    if not l:
+        print "There is no track in the playlist"
+    else:
+        for item in l:
+            vid = json.loads(item)
+            print vid['name']
+    pass
+
+def get_queue(message):
+    code, data = send(message)
+    l = json.loads(data)
+    fst = True
+    if not l:
+        print "There is no tracks to play next"
+    else:
+        for item in l:
+            if fst:
+                fst = False
+                print "(Now playing)",
+            vid = json.loads(item)
+            print vid['name']
+    pass
+
 def send(message):
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.connect((HOST, PORT))
@@ -60,6 +86,7 @@ def send(message):
         # print "Received: {}".format(response)
     finally:
         sock.close()
+
 def debug():
     # send("/add https://www.youtube.com/watch?v=_V7ZKk-NJVA")
     # send("/add https://www.youtube.com/watch?v=aqXW57WM9TA")
@@ -89,7 +116,12 @@ def main():
             search(msg)
         elif msg.startswith("/nowplaying"):
             now_playing(msg)
-        send(msg)
+        elif msg.startswith("/playlist"):
+            get_playlist(msg)
+        elif msg.startswith("/queue"):
+            get_queue(msg)
+        else:
+            send(msg)
     print 'bye'
 
 

@@ -73,6 +73,15 @@ class ThreadedTCPRequestHandler(SocketServer.BaseRequestHandler):
             response_code = 200
             response_data = self.server.player.get_nowplaying()
             # print response_data
+        elif command == "/playlist":
+            response_code = 100
+            response_data = self.server.player.get_playlist()
+        elif command == "/queue":
+            response_code = 101
+            response_data = self.server.player.get_queue()
+        elif command == "/isplaying":
+            response_code = 102
+            response_data = self.server.player.isPlaying()
 
         response = "{} {}".format(response_code, response_data)
         self.request.sendall(response)

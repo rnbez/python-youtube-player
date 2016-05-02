@@ -57,6 +57,8 @@ class YouTubePlayer:
         return
     def next(self):
         self.list_player.next()
+    def isPlaying(self):
+        self.list_player.isPlaying()
 
     def enqueue(self, yt_vid):
         self.playlist.lock()
@@ -86,8 +88,30 @@ class YouTubePlayer:
         if media is None:
             return {}
         else:
+            print media
             return media.get_meta(6)
         # pass
+
+    def get_playlist(self):
+        cnt = self.playlist.count()
+        l = []
+        for i in range(0,cnt):
+            l.append(self.playlist.item_at_index(i).get_meta(6))
+        print l
+        return json.dumps(l)
+
+    def get_queue(self):
+        media = self.player.get_media()
+        idx = self.playlist.index_of_item(media)
+        if idx < 0:
+            idx = 0
+        cnt = self.playlist.count()
+        l = []
+        if cnt > 0:
+            for i in range(idx,cnt):
+                l.append(self.playlist.item_at_index(i).get_meta(6))
+        print l
+        return json.dumps(l)
 
     @vlc.callbackmethod
     def end_callback(self, event):
