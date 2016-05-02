@@ -41,7 +41,11 @@ def search(message):
 
 def now_playing(message):
     code, data = send(message)
-    print json.loads(data)['name']
+    dt = json.loads(data)
+    if not dt:
+        print "There is no track current playing"
+    else:
+        print dt['name']
     pass
 
 def send(message):

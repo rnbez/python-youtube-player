@@ -83,7 +83,10 @@ class YouTubePlayer:
 
     def get_nowplaying(self):
         media = self.player.get_media()
-        return media.get_meta(6)
+        if media is None:
+            return {}
+        else:
+            return media.get_meta(6)
         # pass
 
     @vlc.callbackmethod
