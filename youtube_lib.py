@@ -57,12 +57,17 @@ class YouTubePlayer:
         return
     def next(self):
         self.list_player.next()
-    def enqueue(self, url):
-        # video = pafy.new(url)
-        # url = video.getbest().url
+        media = self.player.get_media()
+        print 'Title: ', media.get_meta(0)
+        print 'DESC: ', media.get_meta(6)
+
+    def enqueue(self, yt_vid):
         self.playlist.lock()
-        media = self.instance.media_new(url)
+        media = self.instance.media_new(yt_vid.stream_url)
         media.parse()
+        meta = vlc.Meta()
+        media.set_meta(0, yt_vid.name)
+        media.set_meta(6, yt_vid.to_JSON())
         self.playlist.add_media(media)
         # print "playlist size is now", self.playlist.count()
         self.playlist.unlock()

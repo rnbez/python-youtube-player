@@ -5,15 +5,16 @@ import vlc, pafy #https://github.com/mps-youtube/pafy
 import threading, socket, SocketServer
 import json
 
+from urllib import urlencode
 from youtube_lib import YouTubePlayer, YouTubeVideo
 
 def search(query):
     import subprocess, string
-    user_words = query.split()
 
-    command = "youtube-dl --skip-download --get-title --get-id --get-duration --max-downloads 7 https://www.youtube.com/results?search_query="
-    for w in user_words:
-        command += w + "+"
+    search_query = {'search_query': query}
+    url = 'https://www.youtube.com/results?' + urlencode(search_query)
+    command = "youtube-dl --skip-download --get-title --get-id --get-duration --max-downloads 7 " + url
+
     process = subprocess.Popen(command, stdout=subprocess.PIPE ,shell=True)
     (output, error) = process.communicate()
     output = output.rstrip('\n')
@@ -38,6 +39,9 @@ class ThreadedTCPRequestHandler(SocketServer.BaseRequestHandler):
             data += " "
         print ">> {}".format(data)
 
+        response_data = ""
+        response_code = 200
+
         command, args = data.split(' ', 1)
         if command == "/play":
             # if args:
@@ -53,21 +57,21 @@ class ThreadedTCPRequestHandler(SocketServer.BaseRequestHandler):
             if args:
                 yt_vid = YouTubeVideo.get_instance(args)
                 self.server.playlist.append(yt_vid)
-                self.server.player.enqueue(yt_vid.stream_url)
+                self.server.player.enqueue(yt_vid)
         elif command == "/vol":
             if args:
                 self.server.player.set_volume(int(args))
         elif command == "/search":
             if args:
-                print args
-                data = search(args)
-                response = "{} {}".format(300, json.dumps(data))
-                self.request.sendall(response)
+                # print args
+                response_code = 300
+                response_data = json.dumps(search(args))
+                # response = "{} {}".format(300, data))
+                # self.request.sendall(response)
         elif command == "/current":
             print self.server.player.playlist
 
-        data = ""
-        response = "{} {}".format(200, data)
+        response = "{} {}".format(response_code, response_data)
         self.request.sendall(response)
 
 

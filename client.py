@@ -53,13 +53,25 @@ def send(message):
         # print "Received: {}".format(response)
     finally:
         sock.close()
-
+def debug():
+    send("/add https://www.youtube.com/watch?v=_V7ZKk-NJVA")
+    send("/add https://www.youtube.com/watch?v=aqXW57WM9TA")
+    send("/play ")
+    send("/next ")
+    # send(HOST, PORT, "/add https://www.youtube.com/watch?v=niex6_vZcdA")
+    # send(HOST, PORT, "/add https://www.youtube.com/watch?v=i_kF4zLNKio")
+    # send(HOST, PORT, "/add https://www.youtube.com/watch?v=ntuxR5q-N0M")
+    # send(HOST, PORT, "/add https://www.youtube.com/watch?v=1TX5gsKBo88")
+    # send(HOST, PORT, "/add https://www.youtube.com/watch?v=8ELbX5CMomE")
+    # send(HOST, PORT, "/vol 20")
 
 def main():
     global HOST
     global PORT
     HOST = sys.argv[1]
     PORT = int(sys.argv[2])
+    debug()
+
     while True:
         msg = raw_input('>> ')
         if msg == "/quit" or msg == "/q":
@@ -71,13 +83,6 @@ def main():
 
 
 if __name__ == '__main__':
-    # send(HOST, PORT, "/add https://www.youtube.com/watch?v=aqXW57WM9TA")
-    # send(HOST, PORT, "/play ")
-    # send(HOST, PORT, "/add https://www.youtube.com/watch?v=niex6_vZcdA")
-    # send(HOST, PORT, "/add https://www.youtube.com/watch?v=i_kF4zLNKio")
-    # send(HOST, PORT, "/add https://www.youtube.com/watch?v=ntuxR5q-N0M")
-    # send(HOST, PORT, "/add https://www.youtube.com/watch?v=1TX5gsKBo88")
-    # send(HOST, PORT, "/add https://www.youtube.com/watch?v=_V7ZKk-NJVA")
-    # send(HOST, PORT, "/add https://www.youtube.com/watch?v=8ELbX5CMomE")
-    # send(HOST, PORT, "/vol 20")
+
+
     main()
