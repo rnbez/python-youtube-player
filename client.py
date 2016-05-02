@@ -10,7 +10,7 @@ def search(message):
     sock.connect((HOST, PORT))
     try:
         sock.sendall(message)
-        response = sock.recv(2048)
+        response = sock.recv(1048 * 4)
 
         if " " not in response:
             response += " "
@@ -51,27 +51,37 @@ def now_playing(message):
 def get_playlist(message):
     code, data = send(message)
     l = json.loads(data)
+
     if not l:
         print "There is no track in the playlist"
     else:
-        for item in l:
-            vid = json.loads(item)
+        printplayingidx = -1
+        newcode, newdata = send("/nowplayingidx")
+        if newcode == '103':
+            if newdata != '-1':
+                printplayingidx = int(newdata)
+
+        cnt = len(l)
+        for i in range(0,cnt):
+            vid = json.loads(l[i])
+            if i == printplayingidx:
+                print "(Now playing)",
             print vid['name']
     pass
 
 def get_queue(message):
     code, data = send(message)
     l = json.loads(data)
-    
-    printplaying = True  # to print if is now playing
-    newcode, newdata = send("/isplaying")
-    if newcode == '102':
-        if newdata == '0':
-            printplaying = False
 
     if not l:
         print "There is no tracks to play next"
     else:
+        printplaying = True  # to print if is now playing
+        newcode, newdata = send("/isplaying")
+        if newcode == '102':
+            if newdata == '0':
+                printplaying = False
+
         for item in l:
             if printplaying:
                 printplaying = False
@@ -85,7 +95,7 @@ def send(message):
     sock.connect((HOST, PORT))
     try:
         sock.sendall(message)
-        response = sock.recv(1024 * 4)
+        response = sock.recv(1024 * 5)
         if " " not in response:
             response += " "
         return response.split(' ', 1)
@@ -94,16 +104,16 @@ def send(message):
         sock.close()
 
 def debug():
-    # send("/add https://www.youtube.com/watch?v=_V7ZKk-NJVA")
-    # send("/add https://www.youtube.com/watch?v=aqXW57WM9TA")
-    # send("/play ")
-    # send("/next ")
-    # send("/nowplaying ")
-    # send(HOST, PORT, "/add https://www.youtube.com/watch?v=niex6_vZcdA")
-    # send(HOST, PORT, "/add https://www.youtube.com/watch?v=i_kF4zLNKio")
-    # send(HOST, PORT, "/add https://www.youtube.com/watch?v=ntuxR5q-N0M")
-    # send(HOST, PORT, "/add https://www.youtube.com/watch?v=1TX5gsKBo88")
-    # send(HOST, PORT, "/add https://www.youtube.com/watch?v=8ELbX5CMomE")
+    send("/add https://www.youtube.com/watch?v=_V7ZKk-NJVA")
+    send("/add https://www.youtube.com/watch?v=aqXW57WM9TA")
+    send("/play ")
+    send("/next ")
+    send("/nowplaying ")
+    send("/add https://www.youtube.com/watch?v=niex6_vZcdA")
+    send("/add https://www.youtube.com/watch?v=i_kF4zLNKio")
+    send("/add https://www.youtube.com/watch?v=ntuxR5q-N0M")
+    send("/add https://www.youtube.com/watch?v=1TX5gsKBo88")
+    send("/add https://www.youtube.com/watch?v=8ELbX5CMomE")
     # send(HOST, PORT, "/vol 20")
     pass
 

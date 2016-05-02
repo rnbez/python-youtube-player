@@ -37,7 +37,7 @@ def search(query):
 class ThreadedTCPRequestHandler(SocketServer.BaseRequestHandler):
     def handle(self):
 
-        data = self.request.recv(1024).strip()
+        data = self.request.recv(1024 * 2).strip()
         if " " not in data:
             data += " "
         print ">> {}".format(data)
@@ -81,8 +81,10 @@ class ThreadedTCPRequestHandler(SocketServer.BaseRequestHandler):
             response_data = self.server.player.get_queue()
         elif command == "/isplaying":
             response_code = 102
-            response_data = self.server.player.isPlaying()
-            print "respdata: ", response_data
+            response_data = self.server.player.is_playing()
+        elif command == "/nowplayingidx":
+            response_code = 103
+            response_data = self.server.player.get_nowplaying_idx()
 
         response = "{} {}".format(response_code, response_data)
         self.request.sendall(response)
