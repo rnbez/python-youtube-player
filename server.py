@@ -8,28 +8,31 @@ import json
 from urllib import urlencode
 from youtube_lib import YouTubePlayer, YouTubeVideo
 
+
 def search(query):
-    import subprocess, string
+    import youtube_dl
 
     search_query = {'search_query': query}
     url = 'https://www.youtube.com/results?' + urlencode(search_query)
-    command = "youtube-dl --skip-download --get-title --get-id --get-duration --max-downloads 7 " + url
 
-    process = subprocess.Popen(command, stdout=subprocess.PIPE ,shell=True)
-    (output, error) = process.communicate()
-    output = output.rstrip('\n')
+    ydl_opts = {'quiet':True, 'max_downloads':10}
+    with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+        result = ydl.extract_info(url,download=False,process=False)
 
-    lines = string.split(output, '\n')
     names = []
     ids = []
-    times = []
 
-    for i in range(0,len(lines),3):
-        names.append(lines[i])
-        ids.append(lines[i+1])
-        times.append(lines[i+2])
+    if 'entries' in result:
+        for vid in result['entries']:
+            if "/watch?v=" in vid['url']:
+                names.append(vid['title'])
+                ids.append(vid['url'])
+    else:
+        names.append(result['title'])
+        ids.append(result['url'])
 
-    return {'names':names, 'ids':ids, 'times':times}
+    return {'names':names, 'ids':ids}
+
 
 class ThreadedTCPRequestHandler(SocketServer.BaseRequestHandler):
     def handle(self):
@@ -66,8 +69,6 @@ class ThreadedTCPRequestHandler(SocketServer.BaseRequestHandler):
                 # print args
                 response_code = 300
                 response_data = json.dumps(search(args))
-                # response = "{} {}".format(300, data))
-                # self.request.sendall(response)
         elif command == "/nowplaying":
             response_code = 200
             response_data = self.server.player.get_nowplaying()

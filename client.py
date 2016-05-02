@@ -10,7 +10,8 @@ def search(message):
     sock.connect((HOST, PORT))
     try:
         sock.sendall(message)
-        response = sock.recv(1024)
+        response = sock.recv(2048)
+
         if " " not in response:
             response += " "
         status_code, data = response.split(' ', 1)
@@ -18,12 +19,11 @@ def search(message):
         if status_code == '300':  # is a search return
             data = json.loads(data)
 
-            times = data['times']
             names = data['names']
             ids = data['ids']
 
             for i in range(0,len(ids)):
-                print "[", i, "] - ", names[i], times[i]
+                print "[", i, "] - ", names[i]
 
             user_response = len(ids)+1
             while int(user_response) not in range(0,len(ids)):
@@ -33,9 +33,9 @@ def search(message):
             text = "Do you wish to add " + names[choice] + " to the playlist? (y/n) "
             user_response2 = raw_input(text)
             if user_response2 == 'y':
-                send("/add " + "https://www.youtube.com/watch?v=" + ids[choice])
+                send("/add " + ids[choice])
             else:
-                print "Not added"
+                print "Song not added"
     finally:
         sock.close()
 
