@@ -3,8 +3,32 @@
 import os, sys, time
 import vlc, pafy #https://github.com/mps-youtube/pafy
 import threading, socket, SocketServer
+import json
 
 from youtube_lib import YouTubePlayer, YouTubeVideo
+
+def search(query):
+    import subprocess, string
+    user_words = query.split()
+
+    command = "youtube-dl --skip-download --get-title --get-id --get-duration --max-downloads 7 https://www.youtube.com/results?search_query="
+    for w in user_words:
+        command += w + "+"
+    process = subprocess.Popen(command, stdout=subprocess.PIPE ,shell=True)
+    (output, error) = process.communicate()
+    output = output.rstrip('\n')
+
+    lines = string.split(output, '\n')
+    names = []
+    ids = []
+    times = []
+
+    for i in range(0,len(lines),3):
+        names.append(lines[i])
+        ids.append(lines[i+1])
+        times.append(lines[i+2])
+
+    return {'names':names, 'ids':ids, 'times':times}
 
 class ThreadedTCPRequestHandler(SocketServer.BaseRequestHandler):
     def handle(self):
@@ -33,9 +57,19 @@ class ThreadedTCPRequestHandler(SocketServer.BaseRequestHandler):
         elif command == "/vol":
             if args:
                 self.server.player.set_volume(int(args))
+        elif command == "/search":
+            if args:
+                print args
+                data = search(args)
+                response = "{} {}".format(300, json.dumps(data))
+                self.request.sendall(response)
+        elif command == "/current":
+            print self.server.player.playlist
+
         data = ""
         response = "{} {}".format(200, data)
         self.request.sendall(response)
+
 
 class ThreadedTCPServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
     def __init__(self, server_address, player, playlist, handler_class=ThreadedTCPRequestHandler):
