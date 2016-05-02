@@ -2,9 +2,12 @@
 
 import socket, sys, json
 
-def send(ip, port, message):
+HOST = ""
+PORT = 0
+
+def search(message):
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    sock.connect((ip, port))
+    sock.connect((HOST, PORT))
     try:
         sock.sendall(message)
         response = sock.recv(1024)
@@ -22,15 +25,29 @@ def send(ip, port, message):
             for i in range(0,len(ids)):
                 print "[", i, "] - ", names[i], times[i]
 
-            user_response = raw_input('Select your choice: ')
+            user_response = len(ids)+1
+            while int(user_response) not in range(0,len(ids)):
+                user_response = raw_input('Select your choice: ')
             choice = int(user_response)
 
             text = "Do you wish to add " + names[choice] + " to the playlist? (y/n) "
             user_response2 = raw_input(text)
             if user_response2 == 'y':
-                send(ip, port, "/add " + "https://www.youtube.com/watch?v=" + ids[choice])
+                send("/add " + "https://www.youtube.com/watch?v=" + ids[choice])
             else:
-                print "ta bom, tchau"
+                print "Not added"
+    finally:
+        sock.close()
+
+def send(message):
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.connect((HOST, PORT))
+    try:
+        sock.sendall(message)
+        response = sock.recv(1024)
+        if " " not in response:
+            response += " "
+        status_code, data = response.split(' ', 1)
 
         return status_code
         # print "Received: {}".format(response)
@@ -39,19 +56,21 @@ def send(ip, port, message):
 
 
 def main():
+    global HOST
+    global PORT
     HOST = sys.argv[1]
     PORT = int(sys.argv[2])
     while True:
         msg = raw_input('>> ')
-        send(HOST, PORT, msg)
         if msg == "/quit" or msg == "/q":
             break
+        elif msg.startswith("/search"):
+            search(msg)
+        send(msg)
     print 'bye'
 
 
 if __name__ == '__main__':
-    HOST = sys.argv[1]
-    PORT = int(sys.argv[2])
     # send(HOST, PORT, "/add https://www.youtube.com/watch?v=aqXW57WM9TA")
     # send(HOST, PORT, "/play ")
     # send(HOST, PORT, "/add https://www.youtube.com/watch?v=niex6_vZcdA")
