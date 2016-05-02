@@ -68,8 +68,10 @@ class ThreadedTCPRequestHandler(SocketServer.BaseRequestHandler):
                 response_data = json.dumps(search(args))
                 # response = "{} {}".format(300, data))
                 # self.request.sendall(response)
-        elif command == "/current":
-            print self.server.player.playlist
+        elif command == "/nowplaying":
+            response_code = 200
+            response_data = self.server.player.get_nowplaying()
+            # print response_data
 
         response = "{} {}".format(response_code, response_data)
         self.request.sendall(response)

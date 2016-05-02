@@ -57,9 +57,6 @@ class YouTubePlayer:
         return
     def next(self):
         self.list_player.next()
-        media = self.player.get_media()
-        print 'Title: ', media.get_meta(0)
-        print 'DESC: ', media.get_meta(6)
 
     def enqueue(self, yt_vid):
         self.playlist.lock()
@@ -83,6 +80,11 @@ class YouTubePlayer:
         # vol = int(1024 * perc / 100)
         self.player.audio_set_volume(perc)
         print self.player.audio_get_volume()
+
+    def get_nowplaying(self):
+        media = self.player.get_media()
+        return media.get_meta(6)
+        # pass
 
     @vlc.callbackmethod
     def end_callback(self, event):
