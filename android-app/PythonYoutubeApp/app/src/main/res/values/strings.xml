@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Python Player Client</string>
+    <string name="activity_main_lbl_ip_addr">Type the Address of the Server:</string>
+    <string name="activity_main_btn_connect">CONNECT</string>
+</resources>
