@@ -47,6 +47,10 @@ This will initialize the client and open a command prompt. The following command
 * `/pause`
 * `/next`
 * `/add [YOUTUBE URL]`
+* `/search [KEYWORDS]`
+* `/nowplaying`
+* `/playlist`
+* `/queue`
 
 See the example:
 ```bash
