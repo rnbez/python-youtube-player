@@ -60,3 +60,5 @@ $ python client.py localhost 9999
 >> /add https://www.youtube.com/watch?v=oyEuk8j8imI
 >> /play
 ```
+
+[![Run on Repl.it](https://repl.it/badge/github/rnbez/python-youtube-player)](https://repl.it/github/rnbez/python-youtube-player)
